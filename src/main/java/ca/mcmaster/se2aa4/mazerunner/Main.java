@@ -6,31 +6,59 @@ import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.apache.commons.cli.*;
+
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) {
-        System.out.println("** Starting Maze Runner");
+        logger.info("** Starting Maze Runner");
+
+
+
+        Options options = new Options();
+        options.addOption("i", true, "input filepath of maze text file");
+
+        //Option i = Option.builder("i").argName("file").hasArg().build();
+        //options.addOption(i);
+
+        CommandLineParser parser = new DefaultParser();
         try {
-            System.out.println("**** Reading the maze from file " + args[0]);
-            BufferedReader reader = new BufferedReader(new FileReader(args[0]));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                for (int idx = 0; idx < line.length(); idx++) {
-                    if (line.charAt(idx) == '#') {
-                        System.out.print("WALL ");
-                    } else if (line.charAt(idx) == ' ') {
-                        System.out.print("PASS ");
+            CommandLine cmd = parser.parse(options, args); // parse the command line arguments
+
+            if (cmd.hasOption("i")) {
+                String filepath = cmd.getOptionValue("i");
+
+                BufferedReader reader = new BufferedReader(new FileReader(filepath));
+                logger.info("**** Reading the maze from file " + filepath + "\n");
+
+                String line;
+                StringBuilder logLine = new StringBuilder();
+
+                while ((line = reader.readLine()) != null) { // while there is still things to read
+                    for (int idx = 0; idx < line.length(); idx++) {
+                        if (line.charAt(idx) == '#') {
+                            logLine.append("WALL "); // append each tile of maze string
+                
+                        } else if (line.charAt(idx) == ' ') {
+                            logLine.append("PASS "); // append each tile of maze to string
+                        }
                     }
+
+                    logger.trace(logLine.toString()); // Log entire line at once
+                    logLine.setLength(0); // clear StringBuilder (for next line)
                 }
-                System.out.print(System.lineSeparator());
+                reader.close(); // close BufferedReader(FileReader)
+            }
+            else {
+                logger.error("no -i flag :(");
             }
         } catch(Exception e) {
-            System.err.println("/!\\ An error has occured /!\\");
+            logger.error("/!\\ An error has occured /!\\");
         }
-        System.out.println("**** Computing path");
-        System.out.println("PATH NOT COMPUTED");
-        System.out.println("** End of MazeRunner");
+        logger.info("**** Computing path");
+        logger.info("PATH NOT COMPUTED");
+        logger.info("** End of MazeRunner");
     }
 }
