@@ -8,13 +8,14 @@ import org.apache.logging.log4j.Logger;
 
 import org.apache.commons.cli.*;
 
+import ca.mcmaster.se2aa4.mazerunner.MazeLoader;
+
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
-
 
 
         Options options = new Options();
@@ -27,6 +28,11 @@ public class Main {
             if (cmd.hasOption("i")) {
                 String filepath = cmd.getOptionValue("i");
 
+                MazeLoader mazeLoader = new MazeLoader();
+                int[][] maze = mazeLoader.loadMaze(filepath);
+
+
+                /*
                 BufferedReader reader = new BufferedReader(new FileReader(filepath));
                 logger.info("**** Reading the maze from file " + filepath + "\n");
 
@@ -47,6 +53,7 @@ public class Main {
                     logLine.setLength(0); // clear StringBuilder (for next line)
                 }
                 reader.close(); // close BufferedReader(FileReader)
+                */
             }
             else {
                 logger.error("no -i flag :(");
