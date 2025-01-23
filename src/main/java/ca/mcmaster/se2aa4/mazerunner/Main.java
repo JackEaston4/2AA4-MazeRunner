@@ -20,9 +20,6 @@ public class Main {
         Options options = new Options();
         options.addOption("i", true, "input filepath of maze text file");
 
-        //Option i = Option.builder("i").argName("file").hasArg().build();
-        //options.addOption(i);
-
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(options, args); // parse the command line arguments
