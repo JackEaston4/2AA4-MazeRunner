@@ -1,49 +1,43 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
 
 public class MazeRunner{
     
     private int[] position = new int[2];
     private int[] finish = new int[2];
 
-    private String[][] mazeArray;
-    private int[] facing;
+    private int[][] maze;
+    private int[] facing = {0,1}; // orginal entry point East side of maze facing West
 
-    public MazeRunner(String[][] mazeArray, int[] entryPoint, int[] finish){
+    private static final Logger logger = LogManager.getLogger();
+    StringBuilder canonical_path = new StringBuilder();
+
+
+    public MazeRunner(int[][] maze, int[] entryPoint, int[] finish){
         position = entryPoint;
         this.finish = finish;
-        this.mazeArray = mazeArray;
+        this.maze = maze;
     }
 
-    public void MazeRunnerAlgorithm(String[][] mazeArray){
+    public void MazeRunnerAlgorithm(){
         while(!isFinish(position)){
-            // do stuff
+            moveForward();
+
+            recordMove('F');
         }
+    }
+
+
+    public boolean isFinish(int[] position){
+        return Arrays.equals(position, finish);
     }
 
     public boolean isWall(int[] position){
-        int row = position[0];
-        int col = position[1];
-        if(mazeArray[row][col].equals("#")){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    public boolean isFinish(int[] position){
-        if (position==finish) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return maze[position[0]][position[1]] == 1;
     }
 
 
@@ -51,16 +45,16 @@ public class MazeRunner{
         int[] look_for_wall_at_coordinates = new int[2];
 
         if (direction == 'F') { // use normal facing vectors for forwards
-            look_for_wall_at_coordinates[0] = position[0] += facing[0];
-            look_for_wall_at_coordinates[1] = position[1] += facing[1];
+            look_for_wall_at_coordinates[0] = position[0] + facing[0];
+            look_for_wall_at_coordinates[1] = position[1] + facing[1];
         }
         else if (direction == 'R') { // right turn (about the origin): (x,y) -> (y,-x)
-            look_for_wall_at_coordinates[0] = position[0] += facing[1];
-            look_for_wall_at_coordinates[1] = position[1] -= facing[0];
+            look_for_wall_at_coordinates[0] = position[0] + facing[1];
+            look_for_wall_at_coordinates[1] = position[1] - facing[0];
         }
         else if (direction == 'L') { // left turn (about the origin): (x,y) -> (-y,x)
-            look_for_wall_at_coordinates[0] = position[0] -= facing[1];
-            look_for_wall_at_coordinates[1] = position[1] += facing[0];
+            look_for_wall_at_coordinates[0] = position[0] - facing[1];
+            look_for_wall_at_coordinates[1] = position[1] + facing[0];
         }
         else {
             throw new IllegalArgumentException("Must specify 'F' 'R' or 'L' for direction");
@@ -74,4 +68,29 @@ public class MazeRunner{
         }
     }
 
+
+    public void moveForward() {
+        position[0] += facing[0];
+        position[1] += facing[1];
+    }
+
+    public void turnDirection(char direction){
+        if (direction == 'R') { // right turn (about the origin): (x,y) -> (y,-x)
+            int temp = facing[0];
+            facing[0] = facing[1];
+            facing[1] = -temp;
+        }
+        else if (direction == 'L') { // left turn (about the origin): (x,y) -> (-y,x)
+            int temp = facing[0];
+            facing[0] = -facing[1];
+            facing[1] = temp;
+        }
+    }
+
+    
+    public void recordMove(char move){
+        canonical_path.append(move);
+        logger.trace("Recorded move '" + move + "' from " + Arrays.toString(position));
+        
+    }
 }

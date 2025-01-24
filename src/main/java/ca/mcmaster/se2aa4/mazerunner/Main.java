@@ -8,8 +8,6 @@ import org.apache.logging.log4j.Logger;
 
 import org.apache.commons.cli.*;
 
-import ca.mcmaster.se2aa4.mazerunner.MazeLoader;
-
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
@@ -30,30 +28,9 @@ public class Main {
 
                 MazeLoader mazeLoader = new MazeLoader();
                 int[][] maze = mazeLoader.loadMaze(filepath);
+                int[][] entry_exit_points = mazeLoader.findEntryExitPoints(maze);
 
-
-                /*
-                BufferedReader reader = new BufferedReader(new FileReader(filepath));
-                logger.info("**** Reading the maze from file " + filepath + "\n");
-
-                String line;
-                StringBuilder logLine = new StringBuilder();
-
-                while ((line = reader.readLine()) != null) { // while there is still things to read
-                    for (int idx = 0; idx < line.length(); idx++) {
-                        if (line.charAt(idx) == '#') {
-                            logLine.append("WALL "); // append each tile of maze string
-                
-                        } else if (line.charAt(idx) == ' ') {
-                            logLine.append("PASS "); // append each tile of maze to string
-                        }
-                    }
-
-                    logger.trace(logLine.toString()); // Log entire line at once
-                    logLine.setLength(0); // clear StringBuilder (for next line)
-                }
-                reader.close(); // close BufferedReader(FileReader)
-                */
+                MazeRunner mazeRunner = new MazeRunner(maze, entry_exit_points[0], entry_exit_points[1]);
             }
             else {
                 logger.error("no -i flag :(");

@@ -3,6 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,4 +70,23 @@ public class MazeLoader {
         return maze;
     }
 
+
+    public int[][] findEntryExitPoints(int[][] maze) {
+        int[] entry_point = null;
+        int[] exit_point = null;
+
+        int number_of_rows = maze.length;
+        int number_of_columns = (maze[0]).length;
+
+        for (int row = 0; row < number_of_rows; row++) {
+            if (maze[row][0] == 0) { // left side of maze
+                entry_point = new int[] {row,0}; 
+            }
+            if (maze[row][number_of_columns-1] == 0) { // right side of maze
+                exit_point = new int[] {row,number_of_columns-1}; 
+            }
+        }
+        int[][] points = {entry_point, exit_point};
+        return points;
+    }
 }
