@@ -11,7 +11,7 @@ public class MazeRunner{
     private int[] finish = new int[2];
 
     private int[][] maze;
-    private int[] facing = {0,1}; // orginal entry point East side of maze facing West
+    private int[] facing = {0,1}; // starting always on E side of maze facing W
 
     private static final Logger logger = LogManager.getLogger();
     StringBuilder canonical_path = new StringBuilder();
@@ -25,9 +25,14 @@ public class MazeRunner{
 
     public String MazeRunnerAlgorithm(){
         while(!isFinish(position)){
-            moveForward();
+            if (isWall(position)) {
+                return "no valid path found via implemented algorithm";
+            }
+            else {
+                moveForward();
 
-            recordMove('F');
+                recordMove('F');
+            }
         }
 
         logger.info("Finish reached");
@@ -43,6 +48,7 @@ public class MazeRunner{
         return maze[position[0]][position[1]] == 1;
     }
 
+    /* Will be implemented in Right-Hand algorithm in final --> was testing different implementations
 
     public boolean checkForWall(int[] position, char direction){
         int[] look_for_wall_at_coordinates = new int[2];
@@ -71,12 +77,6 @@ public class MazeRunner{
         }
     }
 
-
-    public void moveForward() {
-        position[0] += facing[0];
-        position[1] += facing[1];
-    }
-
     public void turnDirection(char direction){
         if (direction == 'R') { // right turn (about the origin): (x,y) -> (y,-x)
             int temp = facing[0];
@@ -88,6 +88,13 @@ public class MazeRunner{
             facing[0] = -facing[1];
             facing[1] = temp;
         }
+    }
+    */
+
+
+    public void moveForward() {
+        position[0] += facing[0];
+        position[1] += facing[1];
     }
 
 
