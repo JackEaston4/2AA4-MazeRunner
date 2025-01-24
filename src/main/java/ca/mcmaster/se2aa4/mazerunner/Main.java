@@ -1,8 +1,5 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,8 +26,14 @@ public class Main {
                 MazeLoader mazeLoader = new MazeLoader();
                 int[][] maze = mazeLoader.loadMaze(filepath);
                 int[][] entry_exit_points = mazeLoader.findEntryExitPoints(maze);
-
+                
+                logger.info("*** Creating MazeRunner");
                 MazeRunner mazeRunner = new MazeRunner(maze, entry_exit_points[0], entry_exit_points[1]);
+                
+                logger.info("**** Computing path");
+                String path = mazeRunner.MazeRunnerAlgorithm();
+
+                System.out.println(path);
             }
             else {
                 logger.error("no -i flag :(");
@@ -38,8 +41,7 @@ public class Main {
         } catch(Exception e) {
             logger.error("/!\\ An error has occured /!\\");
         }
-        logger.info("**** Computing path");
-        logger.info("PATH NOT COMPUTED");
+        
         logger.info("** End of MazeRunner");
     }
 }

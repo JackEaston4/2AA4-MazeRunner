@@ -18,17 +18,20 @@ public class MazeRunner{
 
 
     public MazeRunner(int[][] maze, int[] entryPoint, int[] finish){
-        position = entryPoint;
-        this.finish = finish;
+        this.position = entryPoint.clone();
+        this.finish = finish.clone();
         this.maze = maze;
     }
 
-    public void MazeRunnerAlgorithm(){
+    public String MazeRunnerAlgorithm(){
         while(!isFinish(position)){
             moveForward();
 
             recordMove('F');
         }
+
+        logger.info("Finish reached");
+        return canonical_path.toString();
     }
 
 
@@ -87,10 +90,10 @@ public class MazeRunner{
         }
     }
 
-    
+
     public void recordMove(char move){
         canonical_path.append(move);
-        logger.trace("Recorded move '" + move + "' from " + Arrays.toString(position));
+        logger.trace("Recorded move '" + move + "' to " + Arrays.toString(position));
         
     }
 }
