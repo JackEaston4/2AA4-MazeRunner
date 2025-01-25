@@ -43,6 +43,7 @@ public class MazeRunner{
         }
 
         logger.info("Finish reached");
+        logger.trace("canonical path: " + canonical_path.toString());
         return canonical_path.toString();
     }
 

@@ -31,7 +31,10 @@ public class Main {
                 MazeRunner mazeRunner = new MazeRunner(maze, entry_exit_points[0], entry_exit_points[1]);
                 
                 logger.info("**** Computing path");
-                String path = mazeRunner.MazeRunnerAlgorithm();
+                String canonical_path = mazeRunner.MazeRunnerAlgorithm();
+
+                PathFactorizer pathFactorizer = new PathFactorizer();
+                String path = pathFactorizer.factorizePath(canonical_path);
 
                 System.out.println(path);
             }
