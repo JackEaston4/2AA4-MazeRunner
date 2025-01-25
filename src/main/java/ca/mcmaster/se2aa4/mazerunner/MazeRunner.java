@@ -25,13 +25,20 @@ public class MazeRunner{
 
     public String MazeRunnerAlgorithm(){
         while(!isFinish(position)){
-            if (isWall(position)) {
-                return "no valid path found via implemented algorithm";
-            }
-            else {
+            if (!checkForWall(position, 'R')) {
+                turnDirection('R');
                 moveForward();
 
+                recordMove('R');
                 recordMove('F');
+            }
+            else if (!checkForWall(position, 'F')) {
+                moveForward();
+                recordMove('F');
+            }
+            else {
+                turnDirection('L');
+                recordMove('L');
             }
         }
 
@@ -48,8 +55,7 @@ public class MazeRunner{
         return maze[position[0]][position[1]] == 1;
     }
 
-    /* Will be implemented in Right-Hand algorithm in final --> was testing different implementations
-
+    
     public boolean checkForWall(int[] position, char direction){
         int[] look_for_wall_at_coordinates = new int[2];
 
@@ -89,7 +95,6 @@ public class MazeRunner{
             facing[1] = temp;
         }
     }
-    */
 
 
     public void moveForward() {
