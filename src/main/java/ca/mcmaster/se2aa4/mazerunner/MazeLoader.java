@@ -15,8 +15,7 @@ public class MazeLoader {
         // constructor
     }
 
-    public int[][] loadMaze(String filepath) {
-        int[][] maze = null;
+    public MazeTile[][] loadMaze(String filepath) {
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
@@ -38,7 +37,7 @@ public class MazeLoader {
             logger.trace("Number of rows in maze is: " + rowcount);
             logger.trace("Number of columns in maze is: " + columncount);
 
-            maze = new int[rowcount][columncount];
+            MazeTile[][] maze = new MazeTile[rowcount][columncount];
 
             // populate array with maze tiles
             int row = 0;
@@ -46,11 +45,11 @@ public class MazeLoader {
             while ((line = reader.readLine()) != null) { // while there is still things to read
                 for (int index = 0; index < line.length(); index++) {
                     if (line.charAt(index) == '#') {
-                        maze[row][index] = 1;
+                        maze[row][index] = MazeTile.WALL;
                         logLine.append("WALL "); // append each tile of maze string
             
                     } else if (line.charAt(index) == ' ') {
-                        maze[row][index] = 0;
+                        maze[row][index] = MazeTile.PATH;
                         logLine.append("PASS "); // append each tile of maze to string
                     }
                 }
@@ -59,18 +58,19 @@ public class MazeLoader {
                 logger.trace(logLine.toString()); // Log entire line at once
                 logLine.setLength(0); // clear StringBuilder (for next line)
             }
-            reader.close(); // close BufferedReader(FileReader)
 
+            reader.close(); // close BufferedReader(FileReader)
+            return maze;
         } 
         catch(Exception e) {
             logger.error("Invalid file path");
+            return null;
         }
 
-        return maze;
     }
 
 
-    public int[][] findEntryExitPoints(int[][] maze) {
+    public int[][] findEntryExitPoints(MazeTile[][] maze) {
         int[] entry_point = null;
         int[] exit_point = null;
 
@@ -78,10 +78,10 @@ public class MazeLoader {
         int number_of_columns = (maze[0]).length;
 
         for (int row = 0; row < number_of_rows; row++) {
-            if (maze[row][0] == 0) { // left side of maze
+            if (maze[row][0] == MazeTile.PATH) { // left side of maze
                 entry_point = new int[] {row,0}; 
             }
-            if (maze[row][number_of_columns-1] == 0) { // right side of maze
+            if (maze[row][number_of_columns-1] == MazeTile.PATH) { // right side of maze
                 exit_point = new int[] {row,number_of_columns-1}; 
             }
         }

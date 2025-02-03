@@ -24,7 +24,7 @@ public class Main {
                 String filepath = cmd.getOptionValue("i");
 
                 MazeLoader mazeLoader = new MazeLoader();
-                int[][] maze = mazeLoader.loadMaze(filepath);
+                MazeTile[][] maze = mazeLoader.loadMaze(filepath);
                 int[][] entry_exit_points = mazeLoader.findEntryExitPoints(maze);
                 
                 logger.info("*** Creating MazeRunner");
