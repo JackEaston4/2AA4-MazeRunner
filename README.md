@@ -79,10 +79,6 @@ The delivered program at the end of this assignment should use the following fla
 - `-i MAZE_FILE`: specifies the filename to be used;
 - `-p PATH_SEQUENCE`: activates the path verification mode to validate that PATH_SEQUENCE is correct for the maze
 
-If you are also delivering the bonus, your program will react to a third flag:
-
-- `-method {tremaux, righthand}`: specifies which path computation method to use. (default is right hand)
-
 #### Examples
 
 When no logs are activated, the programs only print the computed path on the standard output.
