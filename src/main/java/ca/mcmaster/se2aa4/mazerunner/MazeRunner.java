@@ -11,7 +11,7 @@ public class MazeRunner{
     private int[] finish = new int[2];
 
     private int[][] maze;
-    private int[] facing = {0,1}; // starting always on E side of maze facing W
+    private int[] facing = {1,0}; // starting always on E side of maze facing W
 
     private static final Logger logger = LogManager.getLogger();
     StringBuilder canonical_path = new StringBuilder();
