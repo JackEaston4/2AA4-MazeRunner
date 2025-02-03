@@ -25,19 +25,16 @@ public class MazeRunner{
 
     public String MazeRunnerAlgorithm(){
         while(!isFinish(position)){
-            if (!checkForWall(position, 'R')) {
-                turnDirection('R');
-                moveForward();
-
+            if (!checkForWall(position, Direction.RIGHT)) {
+                turnDirection(Direction.RIGHT);
                 recordMove('R');
-                recordMove('F');
             }
-            else if (!checkForWall(position, 'F')) {
+            else if (!checkForWall(position, Direction.FORWARD)) {
                 moveForward();
                 recordMove('F');
             }
             else {
-                turnDirection('L');
+                turnDirection(Direction.LEFT);
                 recordMove('L');
             }
         }
@@ -57,18 +54,18 @@ public class MazeRunner{
     }
 
     
-    public boolean checkForWall(int[] position, char direction){
+    public boolean checkForWall(int[] position, Direction direction){
         int[] look_for_wall_at_coordinates = new int[2];
 
-        if (direction == 'F') { // use normal facing vectors for forwards
+        if (direction == Direction.FORWARD) { // use normal facing vectors for forwards
             look_for_wall_at_coordinates[0] = position[0] + facing[0];
             look_for_wall_at_coordinates[1] = position[1] + facing[1];
         }
-        else if (direction == 'R') { // right turn (about the origin): (x,y) -> (y,-x)
+        else if (direction == Direction.RIGHT) { // right turn (about the origin): (x,y) -> (y,-x)
             look_for_wall_at_coordinates[0] = position[0] + facing[1];
             look_for_wall_at_coordinates[1] = position[1] - facing[0];
         }
-        else if (direction == 'L') { // left turn (about the origin): (x,y) -> (-y,x)
+        else if (direction == Direction.LEFT) { // left turn (about the origin): (x,y) -> (-y,x)
             look_for_wall_at_coordinates[0] = position[0] - facing[1];
             look_for_wall_at_coordinates[1] = position[1] + facing[0];
         }
@@ -84,13 +81,13 @@ public class MazeRunner{
         }
     }
 
-    public void turnDirection(char direction){
-        if (direction == 'R') { // right turn (about the origin): (x,y) -> (y,-x)
+    public void turnDirection(Direction direction){
+        if (direction == Direction.RIGHT) { // right turn (about the origin): (x,y) -> (y,-x)
             int temp = facing[0];
             facing[0] = facing[1];
             facing[1] = -temp;
         }
-        else if (direction == 'L') { // left turn (about the origin): (x,y) -> (-y,x)
+        else if (direction == Direction.LEFT) { // left turn (about the origin): (x,y) -> (-y,x)
             int temp = facing[0];
             facing[0] = -facing[1];
             facing[1] = temp;
