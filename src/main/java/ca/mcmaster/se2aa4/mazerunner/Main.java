@@ -29,9 +29,14 @@ public class Main {
                 
                 logger.info("*** Creating MazeRunner");
                 MazeRunner mazeRunner = new MazeRunner(maze, entry_exit_points[0], entry_exit_points[1]);
-                
+
+                // if path verifier or mazesolver with -p flag
+                logger.info("*** Creating MazeSolver");
+                MazeSolver mazeSolver = new MazeSolver(mazeRunner);
+
+
                 logger.info("**** Computing path");
-                String canonical_path = mazeRunner.MazeRunnerAlgorithm();
+                String canonical_path = mazeSolver.MazeRunnerAlgorithm();
 
                 logger.info("**** Factorizing path");
                 PathFactorizer pathFactorizer = new PathFactorizer();

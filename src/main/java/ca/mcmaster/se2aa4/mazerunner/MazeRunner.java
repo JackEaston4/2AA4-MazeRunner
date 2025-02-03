@@ -14,8 +14,6 @@ public class MazeRunner{
     private Facing facing = Facing.EAST; // starting always on W side of maze facing E
 
     private static final Logger logger = LogManager.getLogger();
-    StringBuilder canonical_path = new StringBuilder();
-
 
     public MazeRunner(MazeTile[][] maze, int[] entryPoint, int[] finish){
         this.position = entryPoint.clone();
@@ -23,36 +21,12 @@ public class MazeRunner{
         this.maze = maze;
     }
 
-    public String MazeRunnerAlgorithm(){
-        while(!isFinish(position)){
-            logger.trace("\n-----------------\nLooping through MazeRunnerAlgorithm\n");
-            if (!checkForWall(position, Direction.RIGHT)) {
-                logger.trace("no wall to right, turning right");
-                turnDirection(Direction.RIGHT);
-                recordMove('R');
-
-                moveForward(); // to prevent infinte loops from when in a '+' intersection
-                recordMove('F');
-            }
-            else if (!checkForWall(position, Direction.FORWARD)) {
-                logger.trace("wall right, no wall forward, moving forward");
-                moveForward();
-                recordMove('F');
-            }
-            else {
-                logger.trace("wall right and forward, turning left");
-                turnDirection(Direction.LEFT);
-                recordMove('L');
-            }
-        }
-
-        logger.info("Finish reached");
-        logger.trace("canonical path: " + canonical_path.toString());
-        return canonical_path.toString();
+    public int[] getPosition() {
+        return position.clone();
     }
 
 
-    public boolean isFinish(int[] position){
+    public boolean isAtFinish(){
         return Arrays.equals(position, finish);
     }
 
@@ -65,7 +39,7 @@ public class MazeRunner{
     }
 
     
-    public boolean checkForWall(int[] position, Direction direction){
+    public boolean checkForWall(Direction direction){
         Facing check_facing;
         logger.trace("starting checkForWall");
 
@@ -98,6 +72,7 @@ public class MazeRunner{
         else if (direction == Direction.LEFT) { // left turn (about the origin): (x,y) -> (-y,x)
             facing = facing.turnLeft();
         }
+        logger.trace("Turned " + direction + ", now facing " + facing);
     }
 
 
@@ -107,10 +82,4 @@ public class MazeRunner{
         position[1] += facing_vector[1];
     }
 
-
-    public void recordMove(char move){
-        canonical_path.append(move);
-        logger.trace("Recorded move '" + move + "' to " + Arrays.toString(position));
-        
-    }
 }
