@@ -33,6 +33,7 @@ public class Main {
                 logger.info("**** Computing path");
                 String canonical_path = mazeRunner.MazeRunnerAlgorithm();
 
+                logger.info("**** Factorizing path");
                 PathFactorizer pathFactorizer = new PathFactorizer();
                 String path = pathFactorizer.factorizePath(canonical_path);
 
@@ -43,6 +44,7 @@ public class Main {
             }
         } catch(Exception e) {
             logger.error("/!\\ An error has occured /!\\");
+            e.printStackTrace();
         }
         
         logger.info("** End of MazeRunner");

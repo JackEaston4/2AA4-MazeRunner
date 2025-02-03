@@ -34,26 +34,28 @@ public class MazeLoader {
             }
             reader.close();  // Close after dimension calculation
 
+
             logger.trace("Number of rows in maze is: " + rowcount);
             logger.trace("Number of columns in maze is: " + columncount);
 
-            MazeTile[][] maze = new MazeTile[rowcount][columncount];
+
+            MazeTile[][] maze = new MazeTile[columncount][rowcount];
 
             // populate array with maze tiles
-            int row = 0;
+            int y = 0;
             reader = new BufferedReader(new FileReader(filepath));
             while ((line = reader.readLine()) != null) { // while there is still things to read
-                for (int index = 0; index < line.length(); index++) {
-                    if (line.charAt(index) == '#') {
-                        maze[row][index] = MazeTile.WALL;
+                for (int x = 0; x < line.length(); x++) {
+                    if (line.charAt(x) == '#') {
+                        maze[x][y] = MazeTile.WALL;
                         logLine.append("WALL "); // append each tile of maze string
             
-                    } else if (line.charAt(index) == ' ') {
-                        maze[row][index] = MazeTile.PATH;
+                    } else if (line.charAt(x) == ' ') {
+                        maze[x][y] = MazeTile.PATH;
                         logLine.append("PASS "); // append each tile of maze to string
                     }
                 }
-                row++;
+                y++;
 
                 logger.trace(logLine.toString()); // Log entire line at once
                 logLine.setLength(0); // clear StringBuilder (for next line)
@@ -74,18 +76,18 @@ public class MazeLoader {
         int[] entry_point = null;
         int[] exit_point = null;
 
-        int number_of_rows = maze.length;
-        int number_of_columns = (maze[0]).length;
+        int number_of_columns = maze.length;
+        int number_of_rows = (maze[0]).length;
 
-        for (int row = 0; row < number_of_rows; row++) {
-            if (maze[row][0] == MazeTile.PATH) { // left side of maze
-                entry_point = new int[] {row,0}; 
+        for (int y = 0; y < number_of_rows; y++) {
+            if (maze[0][y] == MazeTile.PATH) { // left side of maze
+                entry_point = new int[] {0,y}; 
             }
-            if (maze[row][number_of_columns-1] == MazeTile.PATH) { // right side of maze
-                exit_point = new int[] {row,number_of_columns-1}; 
+            if (maze[number_of_columns-1][y] == MazeTile.PATH) { // right side of maze
+                exit_point = new int[] {number_of_columns-1,y}; 
             }
         }
-        int[][] points = {entry_point, exit_point};
-        return points;
+        logger.trace("entry point: " + entry_point[0] + " " + entry_point[1] + "   exit point: " + exit_point[0] + " " + exit_point[1]);
+        return new int[][] {entry_point, exit_point};
     }
 }

@@ -11,7 +11,7 @@ public class MazeRunner{
     private int[] finish = new int[2];
 
     private MazeTile[][] maze;
-    private int[] facing = {1,0}; // starting always on E side of maze facing W
+    private Facing facing = Facing.EAST; // starting always on W side of maze facing E
 
     private static final Logger logger = LogManager.getLogger();
     StringBuilder canonical_path = new StringBuilder();
@@ -25,15 +25,22 @@ public class MazeRunner{
 
     public String MazeRunnerAlgorithm(){
         while(!isFinish(position)){
+            logger.trace("\n-----------------\nLooping through MazeRunnerAlgorithm\n");
             if (!checkForWall(position, Direction.RIGHT)) {
+                logger.trace("no wall to right, turning right");
                 turnDirection(Direction.RIGHT);
                 recordMove('R');
+
+                moveForward(); // to prevent infinte loops from when in a '+' intersection
+                recordMove('F');
             }
             else if (!checkForWall(position, Direction.FORWARD)) {
+                logger.trace("wall right, no wall forward, moving forward");
                 moveForward();
                 recordMove('F');
             }
             else {
+                logger.trace("wall right and forward, turning left");
                 turnDirection(Direction.LEFT);
                 recordMove('L');
             }
@@ -50,54 +57,54 @@ public class MazeRunner{
     }
 
     public boolean isWall(int[] position){
-        return maze[position[0]][position[1]] == MazeTile.WALL;
+        logger.trace("in isWall: checking " + position[0] + " " + position[1]);
+        boolean status = maze[position[0]][position[1]] == MazeTile.WALL;
+
+        logger.trace("in isWall: returning check status: " + status);
+        return status;
     }
 
     
     public boolean checkForWall(int[] position, Direction direction){
-        int[] look_for_wall_at_coordinates = new int[2];
+        Facing check_facing;
+        logger.trace("starting checkForWall");
 
         if (direction == Direction.FORWARD) { // use normal facing vectors for forwards
-            look_for_wall_at_coordinates[0] = position[0] + facing[0];
-            look_for_wall_at_coordinates[1] = position[1] + facing[1];
+            check_facing = facing;
         }
-        else if (direction == Direction.RIGHT) { // right turn (about the origin): (x,y) -> (y,-x)
-            look_for_wall_at_coordinates[0] = position[0] + facing[1];
-            look_for_wall_at_coordinates[1] = position[1] - facing[0];
+        else if (direction == Direction.RIGHT) {
+            check_facing = facing.turnRight(); // use vector that is right turn from current facing
         }
-        else if (direction == Direction.LEFT) { // left turn (about the origin): (x,y) -> (-y,x)
-            look_for_wall_at_coordinates[0] = position[0] - facing[1];
-            look_for_wall_at_coordinates[1] = position[1] + facing[0];
+        else if (direction == Direction.LEFT) { // use vector that is left turn from current facing
+            check_facing = facing.turnLeft();
         }
         else {
+            logger.trace("throwing error for invalid direction in checkWall");
             throw new IllegalArgumentException("Must specify 'F' 'R' or 'L' for direction");
         }
 
-        if (isWall(look_for_wall_at_coordinates)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        int[] check_facing_vector = check_facing.getVector();
+        int[] look_at = {position[0] + check_facing_vector[0], position[1] + check_facing_vector[1]};
+
+        logger.trace("in checkForWall: checking " + look_at[0] + " " + look_at[1] + ", " + check_facing + " from " + position[0] + " " + position[1]);
+        return isWall(look_at);
+       
     }
 
     public void turnDirection(Direction direction){
         if (direction == Direction.RIGHT) { // right turn (about the origin): (x,y) -> (y,-x)
-            int temp = facing[0];
-            facing[0] = facing[1];
-            facing[1] = -temp;
+            facing = facing.turnRight();
         }
         else if (direction == Direction.LEFT) { // left turn (about the origin): (x,y) -> (-y,x)
-            int temp = facing[0];
-            facing[0] = -facing[1];
-            facing[1] = temp;
+            facing = facing.turnLeft();
         }
     }
 
 
     public void moveForward() {
-        position[0] += facing[0];
-        position[1] += facing[1];
+        int[] facing_vector = facing.getVector();
+        position[0] += facing_vector[0];
+        position[1] += facing_vector[1];
     }
 
 
