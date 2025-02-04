@@ -26,7 +26,7 @@ public class MazeRunner{
         return getPlayerPosition().getX() == finish.getX() && getPlayerPosition().getY() == finish.getY();
     }
 
-    public boolean isWall(Position position){
+    private boolean isWall(Position position){
         boolean status = maze[position.getX()][position.getY()] == MazeTile.WALL;
         logger.trace("in isWall: returning check status: " + status);
         return status;
