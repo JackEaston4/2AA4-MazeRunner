@@ -31,7 +31,6 @@ public class MazeRunner{
     }
 
     public boolean isWall(int[] position){
-        logger.trace("in isWall: checking " + position[0] + " " + position[1]);
         boolean status = maze[position[0]][position[1]] == MazeTile.WALL;
 
         logger.trace("in isWall: returning check status: " + status);
@@ -41,7 +40,6 @@ public class MazeRunner{
     
     public boolean checkForWall(Direction direction){
         Facing check_facing;
-        logger.trace("starting checkForWall");
 
         if (direction == Direction.FORWARD) { // use normal facing vectors for forwards
             check_facing = facing;

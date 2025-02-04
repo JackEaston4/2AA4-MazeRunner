@@ -11,10 +11,6 @@ public class MazeLoader {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public MazeLoader(){
-        // constructor
-    }
-
     public MazeTile[][] loadMaze(String filepath) {
 
         try {

@@ -15,6 +15,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption("i", true, "input filepath of maze text file");
+        options.addOption(Option.builder("p").hasArgs().valueSeparator(' ').desc("path to be verified by path validation algorithm").build());
 
         CommandLineParser parser = new DefaultParser();
         try {
@@ -30,19 +31,38 @@ public class Main {
                 logger.info("*** Creating MazeRunner");
                 MazeRunner mazeRunner = new MazeRunner(maze, entry_exit_points[0], entry_exit_points[1]);
 
-                // if path verifier or mazesolver with -p flag
-                logger.info("*** Creating MazeSolver");
-                MazeSolver mazeSolver = new MazeSolver(mazeRunner);
+                if (cmd.hasOption("p")) { //
+                    String[] path_args = cmd.getOptionValues("p");
+                    String pathToVerify = String.join(" ", path_args);
+                    
+                    logger.info("*** Creating PathVerifier");
+                    PathVerifier pathVerifier = new PathVerifier(mazeRunner);
+                    
+                    logger.info("*** Verifying provided path: " + pathToVerify);
+                    boolean isValid = pathVerifier.verifyPath(pathToVerify);
+                    
+                    if (isValid) {
+                        System.out.println("correct path");
+                    }
+                    else {
+                        System.out.println("incorrect path");
+                    }
+                }
+                else { // not -p flag
+                    logger.info("*** Creating MazeSolver");
+                    MazeSolver mazeSolver = new MazeSolver(mazeRunner);
 
 
-                logger.info("**** Computing path");
-                String canonical_path = mazeSolver.MazeRunnerAlgorithm();
+                    logger.info("**** Computing path");
+                    String canonical_path = mazeSolver.MazeRunnerAlgorithm();
 
-                logger.info("**** Factorizing path");
-                PathFactorizer pathFactorizer = new PathFactorizer();
-                String path = pathFactorizer.factorizePath(canonical_path);
+                    logger.info("**** Factorizing path");
+                    PathFactorizer pathFactorizer = new PathFactorizer();
+                    String path = pathFactorizer.factorizePath(canonical_path);
 
-                System.out.println(path);
+                    System.out.println(path);
+                }
+                
             }
             else {
                 logger.error("no -i flag :(");
