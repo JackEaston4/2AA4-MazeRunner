@@ -3,8 +3,6 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-
 public class MazeSolver{
     
     private MazeRunner runner;
@@ -48,7 +46,7 @@ public class MazeSolver{
 
     public void recordMove(char move){
         canonical_path.append(move);
-        logger.trace("Recorded move '" + move + "' to " + Arrays.toString(runner.getPosition()));
+        logger.trace("Recorded move '" + move + "' to " + runner.getPosition());
         
     }
 }

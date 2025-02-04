@@ -3,12 +3,10 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-
 public class MazeRunner{
     
-    private int[] position = new int[2];
-    private int[] finish = new int[2];
+    private Position position;
+    private final Position finish;
 
     private MazeTile[][] maze;
     private Facing facing = Facing.EAST; // starting always on W side of maze facing E
@@ -16,22 +14,22 @@ public class MazeRunner{
     private static final Logger logger = LogManager.getLogger();
 
     public MazeRunner(MazeTile[][] maze, int[] entryPoint, int[] finish){
-        this.position = entryPoint.clone();
-        this.finish = finish.clone();
+        this.position = new Position(entryPoint[0], entryPoint[1]);
+        this.finish = new Position(finish[0], finish[1]);
         this.maze = maze;
     }
 
-    public int[] getPosition() {
-        return position.clone();
+    public Position getPosition() {
+        return position;
     }
 
 
     public boolean isAtFinish(){
-        return Arrays.equals(position, finish);
+        return position.getX() == finish.getX() && position.getY() == finish.getY();
     }
 
-    public boolean isWall(int[] position){
-        boolean status = maze[position[0]][position[1]] == MazeTile.WALL;
+    public boolean isWall(Position position){
+        boolean status = maze[position.getX()][position.getY()] == MazeTile.WALL;
 
         logger.trace("in isWall: returning check status: " + status);
         return status;
@@ -56,9 +54,9 @@ public class MazeRunner{
         }
 
         int[] check_facing_vector = check_facing.getVector();
-        int[] look_at = {position[0] + check_facing_vector[0], position[1] + check_facing_vector[1]};
+        Position look_at = new Position(position.getX()+check_facing_vector[0], position.getY()+check_facing_vector[1]);
 
-        logger.trace("in checkForWall: checking " + look_at[0] + " " + look_at[1] + ", " + check_facing + " from " + position[0] + " " + position[1]);
+        logger.trace("in checkForWall: checking " + look_at + ", " + check_facing + " from " + position);
         return isWall(look_at);
        
     }
@@ -76,8 +74,7 @@ public class MazeRunner{
 
     public void moveForward() {
         int[] facing_vector = facing.getVector();
-        position[0] += facing_vector[0];
-        position[1] += facing_vector[1];
+        position = new Position(position.getX() + facing_vector[0], position.getY() + facing_vector[1]);
     }
 
 }
