@@ -51,7 +51,7 @@ public class PathVerifier{
                             logger.info("Invalid path: hit a wall");
                             return false;
                         }
-                        runner.moveForward();
+                        runner.movePlayer();
                     }
                     catch(ArrayIndexOutOfBoundsException e) {
                         logger.error("moveForward or checkForWall has gone out of bounds of the array");

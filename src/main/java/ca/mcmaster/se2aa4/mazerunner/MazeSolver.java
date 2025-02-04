@@ -5,11 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 public class MazeSolver{
     
-    private MazeRunner runner;
-
+    private final MazeRunner runner;
     private static final Logger logger = LogManager.getLogger();
-    StringBuilder canonical_path = new StringBuilder();
-
+    private final StringBuilder canonical_path = new StringBuilder();
 
     public MazeSolver(MazeRunner runner){
         this.runner = runner;
@@ -23,12 +21,12 @@ public class MazeSolver{
                 runner.turnDirection(Direction.RIGHT);
                 recordMove('R');
 
-                runner.moveForward(); // to prevent infinte loops from when in a '+' intersection
+                runner.movePlayer(); // to prevent infinte loops from when in a '+' intersection
                 recordMove('F');
             }
             else if (!runner.checkForWall(Direction.FORWARD)) {
                 logger.trace("wall right, no wall forward, moving forward");
-                runner.moveForward();
+                runner.movePlayer();
                 recordMove('F');
             }
             else {
@@ -46,7 +44,7 @@ public class MazeSolver{
 
     public void recordMove(char move){
         canonical_path.append(move);
-        logger.trace("Recorded move '" + move + "' to " + runner.getPosition());
+        logger.trace("Recorded move '" + move + "' to " + runner.getPlayerPosition());
         
     }
 }
