@@ -20,4 +20,15 @@ public class Position {
         return "(" + x + ", " + y + ")";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Position)) {
+            return false;
+        }
+        Position other = (Position) o;
+        return this.x == other.x && this.y == other.y;
+    }
 }
