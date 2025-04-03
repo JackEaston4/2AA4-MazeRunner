@@ -26,7 +26,7 @@ public class MazeRunner{
         return getPlayerPosition().getX() == finish.getX() && getPlayerPosition().getY() == finish.getY();
     }
 
-    private boolean isWall(Position position) {
+    private boolean isWall(Position position) { // returns true if the position is a wall
         int x = position.getX();
         int y = position.getY();
     
@@ -42,7 +42,7 @@ public class MazeRunner{
     }
 
     
-    public boolean checkForWall(Direction direction){
+    public boolean checkForWall(Direction direction){ // returns true if there is a wall in the direction specified
         Facing facing = player.getFacing();
         Facing check_facing;
 
@@ -64,7 +64,7 @@ public class MazeRunner{
         Position look_at = new Position(getPlayerPosition().getX()+check_facing_vector[0], getPlayerPosition().getY()+check_facing_vector[1]);
 
         logger.trace("in checkForWall: checking " + look_at + ", " + check_facing + " from " + getPlayerPosition());
-        return isWall(look_at);
+        return isWall(look_at); // returns if look_at is a wall
        
     }
 

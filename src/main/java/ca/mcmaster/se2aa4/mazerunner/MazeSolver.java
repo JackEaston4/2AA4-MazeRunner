@@ -3,8 +3,9 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ca.mcmaster.se2aa4.mazerunner.Commands.*;
+
 public class MazeSolver{
-    
     private final MazeRunner runner;
     private static final Logger logger = LogManager.getLogger();
     private final StringBuilder canonical_path = new StringBuilder();
@@ -14,25 +15,37 @@ public class MazeSolver{
     }
 
     public String MazeRunnerAlgorithm(){
+        Command moveForward = new MoveCommand(runner);
+        Command turnRight = new TurnCommand(runner, Direction.RIGHT);
+        Command turnLeft = new TurnCommand(runner, Direction.LEFT);
+        Command lookRight = new LookCommand(runner, Direction.RIGHT);
+        Command lookForward = new LookCommand(runner, Direction.FORWARD);
+
         while(!runner.isAtFinish()){
             logger.trace("\n-----------------\nLooping through MazeRunnerAlgorithm\n");
-            if (!runner.checkForWall(Direction.RIGHT)) {
-                logger.trace("no wall to right, turning right");
-                runner.turnDirection(Direction.RIGHT);
-                recordMove('R');
 
-                runner.movePlayer(); // to prevent infinte loops from when in a '+' intersection
-                recordMove('F');
+            if (lookRight.execute()) { // if there is no wall to the right
+                logger.trace("no wall to right → turning right & moving forward");
+                //turnRight.execute();
+                //recordMove('R');
+                executeAndRecord(turnRight);
+
+                //moveForward.execute();
+                //recordMove('F');
+                executeAndRecord(moveForward);
             }
-            else if (!runner.checkForWall(Direction.FORWARD)) {
-                logger.trace("wall right, no wall forward, moving forward");
-                runner.movePlayer();
-                recordMove('F');
+
+            else if (lookForward.execute()) { // if there is no wall in front
+                logger.trace("wall right, no wall forward → moving forward");
+                //moveForward.execute();
+                //recordMove('F');
+                executeAndRecord(moveForward);
             }
             else {
-                logger.trace("wall right and forward, turning left");
-                runner.turnDirection(Direction.LEFT);
-                recordMove('L');
+                logger.trace("wall right and forward → turning left");
+                //turnLeft.execute();
+                //recordMove('L');
+                executeAndRecord(turnLeft);
             }
         }
 
@@ -42,9 +55,14 @@ public class MazeSolver{
     }
 
 
-    public void recordMove(char move){
-        canonical_path.append(move);
-        logger.trace("Recorded move '" + move + "' to " + runner.getPlayerPosition());
-        
+    // Command pattern implementation
+    private void executeAndRecord(Command command) {
+        if (command.execute()) { // if command was successful
+            char symbol = command.getSymbol();
+            if (symbol != '_') { // 
+                canonical_path.append(symbol);
+                logger.trace("Recorded move '" + symbol + "' at " + runner.getPlayerPosition());
+            }
+        }
     }
 }

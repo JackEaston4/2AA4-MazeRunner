@@ -17,6 +17,7 @@ public class LookCommand implements Command {
         return !runner.checkForWall(direction); // returns true if path is clear
     }
 
+    // to be replaced by observer
     @Override
     public char getSymbol() {
         return '_'; // Not recorded in canonical path
