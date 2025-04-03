@@ -11,9 +11,9 @@ public class MazeRunner{
 
     private static final Logger logger = LogManager.getLogger();
 
-    public MazeRunner(MazeTile[][] maze, int[] entryPoint, int[] finish){
+    public MazeRunner(MazeTile[][] maze, Player player, int[] finish){
         this.maze = maze;
-        this.player = new Player(new Position(entryPoint[0], entryPoint[1]));
+        this.player = player;
         this.finish = new Position(finish[0], finish[1]);
     }
 

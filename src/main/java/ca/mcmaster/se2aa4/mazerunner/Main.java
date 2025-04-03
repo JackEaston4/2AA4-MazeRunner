@@ -3,6 +3,8 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ca.mcmaster.se2aa4.mazerunner.Observer.ActionLoggerObserver;
+
 import org.apache.commons.cli.*;
 
 public class Main {
@@ -29,7 +31,9 @@ public class Main {
                 int[][] entry_exit_points = mazeLoader.findEntryExitPoints(maze);
                 
                 logger.info("*** Creating MazeRunner");
-                MazeRunner mazeRunner = new MazeRunner(maze, entry_exit_points[0], entry_exit_points[1]);
+                Player player = new Player(new Position(entry_exit_points[0][0], entry_exit_points[0][1]));
+                ActionLoggerObserver observer = new ActionLoggerObserver(player);
+                MazeRunner mazeRunner = new MazeRunner(maze, player, entry_exit_points[1]);
 
                 if (cmd.hasOption("p")) { //
                     String[] path_args = cmd.getOptionValues("p");
@@ -54,10 +58,11 @@ public class Main {
 
 
                     logger.info("**** Computing path");
-                    String canonical_path = mazeSolver.MazeRunnerAlgorithm();
-
+                    mazeSolver.MazeRunnerAlgorithm();
+                    
                     logger.info("**** Factorizing path");
                     PathFactorizer pathFactorizer = new PathFactorizer();
+                    String canonical_path = observer.getPath(); // from ActionLoggerObserver
                     String path = pathFactorizer.factorizePath(canonical_path);
 
                     System.out.println(path);
