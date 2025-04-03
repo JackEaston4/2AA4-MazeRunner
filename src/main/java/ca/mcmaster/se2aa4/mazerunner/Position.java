@@ -7,6 +7,12 @@ public class Position {
         this.x = x;
         this.y = y;
     }
+
+    // Polymorphism for the win!
+    public Position(int[] position) {
+        this.x = position[0];
+        this.y = position[1];
+    }
     
     public int getX() {
         return x;

@@ -16,38 +16,40 @@ public class PathVerifier{
         this.runner = runner;
     }
 
-    public boolean verifyPath(String path) {
+    public boolean verifyPath(String path) {        
         path = cleanPath(path);
         logger.trace("verifying cleaned path: " + path);
 
         int index = 0;
         while(index < path.length()) {
             logger.trace("looping: index is " + index);
-            int repeat = 1;
+
+            int repeat = 1; // repeat defaults to 1 (if no number is given)
             if (Character.isDigit(path.charAt(index))) {
-                repeat = extractNumber(path, index); // extract the number of repeats
-                index += String.valueOf(repeat).length(); // skip reading those numbers
+                repeat = extractNumber(path, index); // extract the number (may more than 1 digit)
+                index += String.valueOf(repeat).length(); // increase index (to stay in sync) if multiple digits were read
                 
                 logger.trace("extracted number: repeat count is: '" + repeat + "'   index is now: " + index);
             }
 
-            if (index >= path.length()) { 
+            if (index >= path.length()) {  // checking that the path does not end in a number
                 logger.info("Invalid path: cannot end with a number");
-                return false; // path cannot end in a number
+                return false;
             }
 
+            // now process the next move character
             char move = path.charAt(index);
-
 
             if (!isValidInstruction(move)) {
                 logger.info("Invalid path: invalid instruction");
                 return false;
             }
-            logger.trace("Performing action " + move + " " + repeat + " times");
+
+            logger.trace("Performing action " + move + " " + repeat + " times"); // repeat defaults to 1 each time through the loop
             for (int i = 0; i < repeat; i++) { // perform the move 'repeat' times
                 if (move == 'F') {
                     try {
-                        if (runner.checkForWall(Direction.FORWARD)) {
+                        if (runner.checkForWall(Direction.FORWARD)) { // if there is a wall in front
                             logger.info("Invalid path: hit a wall");
                             return false;
                         }
@@ -57,20 +59,24 @@ public class PathVerifier{
                         logger.error("moveForward or checkForWall has gone out of bounds of the array");
                         return false;
                     }
-                }
+                } // end of if move == 'F'
+
                 else if (move == 'R') {
                     runner.turnDirection(Direction.RIGHT);
                 }
+
                 else if (move == 'L') {
                     runner.turnDirection(Direction.LEFT);
                 }
-            } // end of for loop
+
+            } // end of action-repetition for loop
 
             // move has been processed fully
-            index++; // move index to next char
-            logger.trace("end of while loop");
+            index++;
+            logger.trace("end of while loop execution: index is now " + index + " - looping...");
         } 
         
+        // at the end of the inputted path exection, return if the player is at the finish
         return runner.isAtFinish();
     }
 

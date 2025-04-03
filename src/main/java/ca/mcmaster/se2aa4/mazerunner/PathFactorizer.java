@@ -6,28 +6,28 @@ public class PathFactorizer {
 
         canonical_path = canonical_path.replaceAll("\\s+",""); // remove all spaces 
 
-        int count = 1;
-        char last_char = canonical_path.charAt(0);
+        int repetitions = 1;
+        char previous_char = canonical_path.charAt(0);
 
-        for (int i=1; i<canonical_path.length(); i++) {
-            char c = canonical_path.charAt(i);
+        for (int i=1; i < canonical_path.length(); i++) {
+            char current_char = canonical_path.charAt(i);
 
-            if (c == last_char) count++;
+            if (current_char == previous_char) repetitions++;
 
             else { // if current character is not the same as last character
-                if (count != 1) factorized_path.append(count);
+                if (repetitions != 1) factorized_path.append(repetitions);
             
-                factorized_path.append(last_char);
+                factorized_path.append(previous_char);
                 factorized_path.append(" ");
                 
-                last_char = c;
-                count = 1;
+                previous_char = current_char;
+                repetitions = 1;
             }
         }
 
-        // final char
-        if (count != 1) factorized_path.append(count);
-        factorized_path.append(last_char);
+        // final character
+        if (repetitions != 1) factorized_path.append(repetitions);
+        factorized_path.append(previous_char);
 
         return factorized_path.toString();
     }

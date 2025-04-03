@@ -75,15 +75,16 @@ public class MazeLoader {
         int number_of_columns = maze.length;
         int number_of_rows = (maze[0]).length;
 
+        // iterate through each row in maze
         for (int y = 0; y < number_of_rows; y++) {
-            if (maze[0][y] == MazeTile.PATH) { // left side of maze
+            if (maze[0][y] == MazeTile.PATH) { // check left side of maze 
                 entry_point = new int[] {0,y}; 
             }
-            if (maze[number_of_columns-1][y] == MazeTile.PATH) { // right side of maze
+            if (maze[number_of_columns-1][y] == MazeTile.PATH) { // check right side of maze
                 exit_point = new int[] {number_of_columns-1,y}; 
             }
         }
-        logger.trace("entry point: " + entry_point[0] + " " + entry_point[1] + "   exit point: " + exit_point[0] + " " + exit_point[1]);
+        logger.trace("entry point: " + entry_point + " exit point: " + exit_point);
         return new int[][] {entry_point, exit_point};
     }
 }
