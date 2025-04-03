@@ -26,8 +26,17 @@ public class MazeRunner{
         return getPlayerPosition().getX() == finish.getX() && getPlayerPosition().getY() == finish.getY();
     }
 
-    private boolean isWall(Position position){
-        boolean status = maze[position.getX()][position.getY()] == MazeTile.WALL;
+    private boolean isWall(Position position) {
+        int x = position.getX();
+        int y = position.getY();
+    
+        // Bounds check
+        if (x < 0 || y < 0 || x >= maze.length || y >= maze[0].length) {
+            logger.trace("in isWall: position " + position + " is out of bounds → treating as WALL");
+            return true; // Treat out-of-bounds as wall
+        }
+    
+        boolean status = maze[x][y] == MazeTile.WALL;
         logger.trace("in isWall: returning check status: " + status);
         return status;
     }
