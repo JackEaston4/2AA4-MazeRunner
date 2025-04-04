@@ -3,6 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ca.mcmaster.se2aa4.mazerunner.Commands.*;
 
 public class PathVerifier{
     
@@ -19,6 +20,12 @@ public class PathVerifier{
     public boolean verifyPath(String path) {        
         path = cleanPath(path);
         logger.trace("verifying cleaned path: " + path);
+
+        // creating commands
+        Command moveForward = new MoveCommand(runner);
+        Command turnRight = new TurnCommand(runner, Direction.RIGHT);
+        Command turnLeft = new TurnCommand(runner, Direction.LEFT);
+        Command lookForward = new LookCommand(runner, Direction.FORWARD);
 
         int index = 0;
         while(index < path.length()) {
@@ -37,6 +44,7 @@ public class PathVerifier{
                 return false;
             }
 
+            
             // now process the next move character
             char move = path.charAt(index);
 
@@ -49,11 +57,11 @@ public class PathVerifier{
             for (int i = 0; i < repeat; i++) { // perform the move 'repeat' times
                 if (move == 'F') {
                     try {
-                        if (runner.checkForWall(Direction.FORWARD)) { // if there is a wall in front
+                        if (!lookForward.execute()) { // if there is not a path forwards
                             logger.info("Invalid path: hit a wall");
                             return false;
                         }
-                        runner.movePlayer();
+                        moveForward.execute(); // move forward
                     }
                     catch(ArrayIndexOutOfBoundsException e) {
                         logger.error("moveForward or checkForWall has gone out of bounds of the array");
@@ -62,11 +70,11 @@ public class PathVerifier{
                 } // end of if move == 'F'
 
                 else if (move == 'R') {
-                    runner.turnDirection(Direction.RIGHT);
+                    turnRight.execute(); // turn right
                 }
 
                 else if (move == 'L') {
-                    runner.turnDirection(Direction.LEFT);
+                    turnLeft.execute(); // turn right
                 }
 
             } // end of action-repetition for loop
