@@ -12,6 +12,7 @@ public class PathVerifierTests {
     private MazeTile[][] maze;
     private MazeRunner runner;
     private PathVerifier verifier;
+    private Player player;
 
     @BeforeEach
     void setup() {
@@ -25,10 +26,10 @@ public class PathVerifierTests {
             {MazeTile.WALL, MazeTile.PATH, MazeTile.WALL}
         };
 
-        int[] entry = {0, 1}; // entry on the left side
+        player = new Player(new Position(0, 1));
         int[] exit = {2, 1};  // exit on the right
 
-        runner = new MazeRunner(maze, entry, exit);
+        runner = new MazeRunner(maze, player, exit);
         verifier = new PathVerifier(runner);
     }
 
