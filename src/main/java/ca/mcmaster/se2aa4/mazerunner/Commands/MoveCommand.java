@@ -14,10 +14,4 @@ public class MoveCommand implements Command {
         runner.movePlayer();
         return true;
     }
-
-    // to be replaced with observer
-    @Override
-    public char getSymbol() {
-        return 'F';
-    }
 }

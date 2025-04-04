@@ -17,11 +17,4 @@ public class TurnCommand implements Command {
         runner.turnDirection(direction);
         return true;
     }
-
-    // to be replaced by observer
-    @Override
-    public char getSymbol() {
-        if (direction == Direction.LEFT) return 'L';
-        else return 'R';
-    }
 }
